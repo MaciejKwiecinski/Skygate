@@ -13,9 +13,10 @@ class Exam(models.Model):
     subject=models.IntegerField(choices=subject)
     points=models.IntegerField()
     grades=models.IntegerField()
-    student=models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    student=models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Exercise(models.Model):
     task=models.TextField()
     answers=models.TextField()
+    points=models.IntegerField(default=1)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)

@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from manage_exams.views import ExamsList,ManageExamView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api-exam/',ExamsList.as_view(),name='exams_list'),
+    path('api-exam/<int:id>',ManageExamView.as_view(),name='exam'),
 ]
