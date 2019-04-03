@@ -6,3 +6,6 @@ class ExamAdmin(admin.ModelAdmin):
     list_display = ('subject','points','grades')
 admin.site.register(Exam, ExamAdmin)
 
+class ExerciseAdmin(admin.ModelAdmin):
+    list_display = ('task','answers','points')
+admin.site.register(Exercise, ExerciseAdmin)

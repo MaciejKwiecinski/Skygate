@@ -15,10 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from manage_exams.views import ExamsList,ManageExamView
+from manage_exams.views import ExamsList,ManageExamView,DocsView,ExerciseList,ExercisesView
+from rest_framework import routers
+
+
+
+router = routers.DefaultRouter(trailing_slash=False)
 
 urlpatterns = [
+    path('', DocsView.as_view()),
     path('admin/', admin.site.urls),
     path('api-exam/',ExamsList.as_view(),name='exams_list'),
-    path('api-exam/<int:id>',ManageExamView.as_view(),name='exam'),
+    path('api-exam/<int:id>',ManageExamView.as_view()),
+    path('api-exercises/',ExerciseList.as_view()),
+    path('api-exercises/<int:id>',ExercisesView.as_view())
 ]
+urlpatterns += router.urls
