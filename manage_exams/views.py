@@ -1,10 +1,13 @@
 from django.http import Http404
 from django.shortcuts import render
+from django.views import View
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Exam,Exercise,User
+from django.contrib.auth.models import Permission,User
+from .models import Exam,Exercise
 from .serializers import ExamSerializer,UserSerializer,ExerciseSerializer
+from .form import ExamForm
 
 # Create your views here.
 
@@ -48,4 +51,9 @@ class ManageExamView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, id, format=None):
-        pass
+        serializer = ExamSerializer(request.POST)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
