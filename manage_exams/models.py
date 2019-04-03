@@ -13,7 +13,10 @@ class Exam(models.Model):
     subject=models.IntegerField(choices=subject)
     points=models.IntegerField()
     grades=models.IntegerField()
-    student=models.ForeignKey(User, on_delete=models.CASCADE)
+    student=models.ManyToManyField(User)
+
+    def __str__(self):
+        return self.subject
 
 class Exercise(models.Model):
     task=models.TextField()
