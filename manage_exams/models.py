@@ -9,17 +9,17 @@ subject={(0,'polish'),
          (4,'informatics')
          }
 
+class Exercise(models.Model):
+    task=models.TextField()
+    answers=models.TextField()
+    points=models.IntegerField(default=1)
+
 class Exam(models.Model):
     subject=models.IntegerField(choices=subject)
     points=models.IntegerField()
     grades=models.IntegerField()
     student=models.ManyToManyField(User)
+    exercise = models.ManyToManyField(Exercise)
 
     def __str__(self):
         return self.subject
-
-class Exercise(models.Model):
-    task=models.TextField()
-    answers=models.TextField()
-    points=models.IntegerField(default=1)
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)

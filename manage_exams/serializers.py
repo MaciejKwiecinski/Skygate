@@ -6,14 +6,14 @@ class ExamSerializer(serializers.ModelSerializer):
     grades = serializers.IntegerField(min_value=1,max_value=6)
     class Meta:
         model=Exam
-        fields=('subject','points','student','grades')
+        fields=('subject','points','student','grades',"exercise")
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username','first_name','last_name')
+        fields = ('username','first_name','last_name')
 
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model=Exercise
-        fields = '__all__'
+        fields = ('task','answers','points')
