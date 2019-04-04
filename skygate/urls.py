@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from manage_exams.views import ExamsList,ManageExamView,DocsView,ExerciseList,ExercisesView
+from manage_exams.views import ExamsList,ManageExamView,DocsView,ExerciseList,ExercisesView,create_auth
 from rest_framework import routers
 
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('api-exam/',ExamsList.as_view(),name='exams_list'),
     path('api-exam/<int:id>',ManageExamView.as_view()),
     path('api-exercises/',ExerciseList.as_view()),
-    path('api-exercises/<int:id>',ExercisesView.as_view())
+    path('api-exercises/<int:id>',ExercisesView.as_view()),
+    path('users/register', create_auth),
 ]
 urlpatterns += router.urls
