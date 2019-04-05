@@ -19,3 +19,7 @@ for i in tab:
     else:
         pass
 print(x)
+print(skyphrases('aa bb cc dd ee'))
+print(skyphrases('aa bb cc dd aaa'))
+print(skyphrases('aa bb cc dd aa'))
+

@@ -15,20 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from manage_exams.views import ExamsList,ManageExamView,DocsView,ExerciseList,ExercisesView,create_auth
+from manage_exams.views import ExamsList,ManageExamView,DocsView,ExerciseList,ExercisesView,LoginView,CreateUserView
 from rest_framework import routers
 
 
 
 router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'createuser', CreateUserView)
 
 urlpatterns = [
     path('', DocsView.as_view()),
     path('admin/', admin.site.urls),
     path('api-exam/',ExamsList.as_view(),name='exams_list'),
-    path('api-exam/<int:id>',ManageExamView.as_view()),
-    path('api-exercises/',ExerciseList.as_view()),
-    path('api-exercises/<int:id>',ExercisesView.as_view()),
-    path('users/register', create_auth),
+    path('api-exam/<int:id>',ManageExamView.as_view(),name = 'exam'),
+    path('api-exercises/',ExerciseList.as_view(),name = 'exercise_list'),
+    path('api-exercises/<int:id>',ExercisesView.as_view(), name = 'exercise'),
+    path('api-user/',LoginView.as_view(), name = 'login' ),
 ]
 urlpatterns += router.urls

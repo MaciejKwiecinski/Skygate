@@ -1,15 +1,18 @@
+from django.contrib.auth import get_user_model
 from django.http import Http404
+from pytz import unicode
 from rest_framework.authentication import SessionAuthentication,BasicAuthentication
-from rest_framework.permissions import IsAdminUser
-from rest_framework.decorators import permission_classes,api_view
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Exam,Exercise,User
-from .serializers import ExamSerializer,ExerciseSerializer,UserSerializer
+from rest_framework.viewsets import GenericViewSet
+from .models import Exam,Exercise
+from .serializers import ExamSerializer, ExerciseSerializer, RegisterSerializer
+
 
 # Create your views here.
-
 
 class ExamsList(APIView):
     authentication_classes = (SessionAuthentication,BasicAuthentication)
@@ -30,7 +33,7 @@ class ExamsList(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            pass
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class ManageExamView(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -46,28 +49,34 @@ class ManageExamView(APIView):
         serializer = ExamSerializer(exam,context={'request':request})
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def delete(self,request, id,format=None):
-        exam = self.get_object(id)
-        exam.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_staff == True:
+            exam = self.get_object(id)
+            exam.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    @permission_classes((IsAdminUser,))
     def put(self,request,id, format=None):
-        exam = self.get_object(id)
-        serializer = ExamSerializer(exam, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_staff == True:
+            exam = self.get_object(id)
+            serializer = ExamSerializer(exam, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    @permission_classes((IsAdminUser,))
-    def post(self, request, id, format=None):
-        serializer = ExamSerializer(request.POST)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, format=None):
+        if request.user.is_staff == True:
+            serializer = ExamSerializer(request.POST)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class ExerciseList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -77,13 +86,15 @@ class ExerciseList(APIView):
         serializer = ExerciseSerializer(exercise, many=True, context={"request": request})
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def post(self, request, format=None):
-        serializer = ExerciseSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_staff == True:
+            serializer = ExerciseSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class ExercisesView(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -99,29 +110,34 @@ class ExercisesView(APIView):
         serializer = ExerciseSerializer(exercise,context={'request':request})
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def delete(self,request, id,format=None):
-        exercise = self.get_object(id)
-        exercise.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_staff == True:
+            exercise = self.get_object(id)
+            exercise.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    @permission_classes((IsAdminUser,))
     def put(self,request,id, format=None):
-        exercise = self.get_object(id)
-        serializer = ExerciseSerializer(exercise, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_staff == True:
+            exercise = self.get_object(id)
+            serializer = ExerciseSerializer(exercise, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    @permission_classes((IsAdminUser,))
-    def post(self, request, id, format=None):
-        serializer = ExerciseSerializer(request.POST)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    def post(self, request, format=None):
+        if request.user.is_staff == True:
+            serializer = ExerciseSerializer(request.POST)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class DocsView(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -131,22 +147,28 @@ class DocsView(APIView):
             apidocs = {
                    'exercises': request.build_absolute_uri('api-exercises/'),
                    'exams': request.build_absolute_uri('api-exam/'),
+                   'logged users':request.build_absolute_uri('api-user/'),
                    }
         else:
             apidocs = {
                 'your exams': request.build_absolute_uri('api-exam/'),
+                'your account': request.build_absolute_uri('api-user/'),
             }
         return Response(apidocs)
 
-@api_view(['POST'])
-def create_auth(request):
-    serialized = UserSerializer(data=request.data)
-    if serialized.is_valid():
-        User.objects.create_user(
-            serialized.init_data['email'],
-            serialized.init_data['username'],
-            serialized.init_data['password']
-        )
-        return Response(serialized.data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginView(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        content = {
+            'user': unicode(request.user),
+            'auth': unicode(request.auth),
+            'admin': unicode(request.user.is_staff),
+        }
+        return Response(content)
+
+class CreateUserView(CreateModelMixin, GenericViewSet):
+    queryset = get_user_model().objects.all()
+    serializer_class = RegisterSerializer
