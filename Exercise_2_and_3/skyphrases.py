@@ -7,6 +7,7 @@ def skyphrases(text):
             x=True
         else:
             x=False
+            break
     return x
 
 file = open("skyphrases.txt", "r+")
@@ -19,7 +20,4 @@ for i in tab:
     else:
         pass
 print(x)
-print(skyphrases('aa bb cc dd ee'))
-print(skyphrases('aa bb cc dd aaa'))
-print(skyphrases('aa bb cc dd aa'))
 
