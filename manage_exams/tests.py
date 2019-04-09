@@ -1,8 +1,9 @@
 from django.urls import reverse
 from django.test import TestCase
 from .models import User,Exam,Exercise
+from rest_framework.test import APITestCase
 
-class Connection(TestCase):
+class Connection(APITestCase):
 
     def exam(self):
         response = self.client.get(reverse('exam'))
@@ -21,7 +22,7 @@ class Connection(TestCase):
         self.assertEqual(response.status_code, 200),
 
 
-class ModelTest(TestCase):
+class ModelTest(APITestCase):
 
     def test_user(self):
         test_user = User.objects.get(id = 1)
