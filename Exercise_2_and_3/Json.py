@@ -5,9 +5,7 @@ with open('Json.txt') as file:
 
 numbers = re.findall(r'(-*\d+)', text)
 
-
 def summary(input):
    return sum([int(n) for n in input])
-
 
 print(summary(numbers))
