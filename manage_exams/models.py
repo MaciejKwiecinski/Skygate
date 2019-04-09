@@ -13,13 +13,13 @@ class Exercise(models.Model):
     task=models.TextField()
     answers=models.TextField()
     points=models.IntegerField(default=1)
-    url = models.CharField(max_length= 255, default = f'127.0.0.1:8000/api-exercises/{id}')
+    url = models.CharField(max_length= 255, default = f'http://0.0.0.0:8000/api-exercises/{id}')
 
 class Exam(models.Model):
     subject=models.IntegerField(choices=subject)
     points=models.IntegerField()
     grades=models.IntegerField()
-    url = models.CharField(max_length=255, default=f'127.0.0.1:8000/api-exam/{id}')
+    url = models.CharField(max_length=255, default=f'http://0.0.0.0:8000/api-exam/{id}')
     student=models.ManyToManyField(User)
     exercise = models.ManyToManyField(Exercise)
 

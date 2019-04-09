@@ -1,15 +1,12 @@
-from django.contrib.auth import get_user_model
 from django.http import Http404
 from pytz import unicode
 from rest_framework.authentication import SessionAuthentication,BasicAuthentication
-from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
 from .models import Exam,Exercise
-from .serializers import ExamSerializer, ExerciseSerializer, RegisterSerializer
+from .serializers import ExamSerializer, ExerciseSerializer
 
 
 # Create your views here.
@@ -168,7 +165,3 @@ class LoginView(APIView):
             'admin': unicode(request.user.is_staff),
         }
         return Response(content)
-
-class CreateUserView(CreateModelMixin, GenericViewSet):
-    queryset = get_user_model().objects.all()
-    serializer_class = RegisterSerializer
